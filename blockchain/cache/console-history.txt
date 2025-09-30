@@ -1,0 +1,18 @@
+await hello.setMessage("Hi Sepolia!"); // updatawait hello.message();
+await hello.message(); // reads the current message
+const hello = await HelloWorld.attach("0x962597c4635e71456b503BeECaF6A94C9fe14BC1");
+const HelloWorld = await ethers.getContractFactory("HelloWorld");
+.help
+console.log(details);
+const details = await loan.getLoan(0);
+const tx =. Fetch the stored loan details
+// 1. Make a loan request (transaction)
+console.log(details);
+const details = await loan.getLoan(0);
+// Fetch loan details
+await loan.requestLo
+// Make a loan request
+const loan = await LoanContract.attach("0x5FbDB2315678afecb367f032d93F642f64180aa3");
+const LoanContract = await ethers.getContractFactory("LoanContract");
+".help"
+help
