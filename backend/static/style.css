@@ -1,82 +1,55 @@
-/* ===== Global Styles ===== */
 body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-image: url('/static/AI-In-Blockchain-1024x569.jpg');
-    background-size: cover;       /* Fill the whole page */
-    background-position: center;  /* Center image */
-    background-repeat: no-repeat; /* No tiling */
+    background-color: #121212;
     color: white;
-    height: 100vh;
+    font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100vh;
 }
 
-/* ===== Form Container ===== */
 .container {
-    background: rgba(0, 0, 0, 0.7);  /* Transparent black for readability */
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    background-color: #1e1e1e;
+    padding: 30px;
+    border-radius: 10px;
     width: 400px;
     text-align: center;
 }
 
-/* ===== Title ===== */
-.container h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #00c3ff; /* Cyan highlight */
+h1, h2 {
+    color: #00ffcc;
 }
 
-/* ===== Form Labels ===== */
-form label {
+label {
     display: block;
-    text-align: left;
-    margin-bottom: 8px;
+    margin-top: 15px;
     font-weight: bold;
-    font-size: 14px;
 }
 
-/* ===== Inputs ===== */
-form input, form select {
+input {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 8px;
+    padding: 8px;
+    margin-top: 5px;
+    background: #2c2c2c;
     border: none;
-    outline: none;
-    font-size: 14px;
-}
-
-/* ===== Submit Button ===== */
-button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    background: linear-gradient(90deg, #00c3ff, #0066ff);
     color: white;
+    border-radius: 5px;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px;
+    width: 100%;
+    background: #00ffcc;
+    color: black;
+    border: none;
+    font-weight: bold;
     cursor: pointer;
-    transition: 0.3s ease;
+    border-radius: 5px;
 }
 
 button:hover {
-    background: linear-gradient(90deg, #0066ff, #00c3ff);
-    transform: scale(1.05);
+    background: #00ccaa;
 }
 
-/* ===== Prediction Result Box ===== */
-.result-box {
-    margin-top: 20px;
-    padding: 15px;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    font-size: 16px;
-    font-weight: bold;
-}
 
