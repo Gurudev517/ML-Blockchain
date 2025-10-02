@@ -5,25 +5,30 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #f5f5f5;
+            margin: 0;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            background: url('https://i.ibb.co/6n7Yx0n/ml-bg.jpg'), 
+                        url('https://i.ibb.co/GP7t1M3/blockchain-bg.jpg');
+            background-size: cover, cover;
+            background-position: left center, right center;
+            background-blend-mode: overlay;
+            background-color: rgba(18, 18, 18, 0.85);
         }
         form {
-            max-width: 400px;
+            max-width: 420px;
             width: 100%;
-            padding: 20px;
-            border-radius: 10px;
-            background: #1e1e1e;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            padding: 25px;
+            border-radius: 12px;
+            background: rgba(30, 30, 30, 0.95);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
         }
         h2 {
             text-align: center;
-            color: #2196f3; /* Blue */
+            color: #00e5ff;
+            margin-bottom: 15px;
         }
         label {
             font-weight: bold;
@@ -41,18 +46,18 @@
         }
         input:focus, select:focus {
             outline: none;
-            border-color: #2196f3;
+            border-color: #00e5ff;
         }
         button {
-            background: #2196f3; /* Blue */
-            color: white;
+            background: #00e5ff;
+            color: black;
+            font-weight: bold;
             border: none;
             cursor: pointer;
             font-size: 16px;
-            font-weight: bold;
         }
         button:hover {
-            background: #1976d2;
+            background: #00bcd4;
         }
     </style>
 </head>
@@ -65,9 +70,6 @@
 
         <label>Loan Amount:</label>
         <input type="number" name="Loan Amount" required>
-
-        <label>Loan Duration (Months):</label>
-        <input type="number" name="Loan Duration" min="1" required>
 
         <label>Employment Status:</label>
         <select name="Employment Status" required>
@@ -96,3 +98,4 @@
     </form>
 </body>
 </html>
+
