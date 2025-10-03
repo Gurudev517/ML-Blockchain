@@ -1,98 +1,65 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Loan Approval Prediction</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #f5f5f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        form {
-            max-width: 400px;
-            width: 100%;
-            padding: 20px;
-            border-radius: 10px;
-            background: #1e1e1e;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-        }
-        h2 {
-            text-align: center;
-            color: #2196f3; /* Blue */
-        }
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 10px;
-        }
-        input, select, button {
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0 15px 0;
-            border-radius: 6px;
-            border: 1px solid #444;
-            background: #2c2c2c;
-            color: #f5f5f5;
-        }
-        input:focus, select:focus {
-            outline: none;
-            border-color: #2196f3;
-        }
-        button {
-            background: #2196f3; /* Blue */
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        button:hover {
-            background: #1976d2;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loan Approval Prediction</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='loanform.css') }}">
 </head>
 <body>
-    <form action="/predict" method="post">
-        <h2>Loan Prediction Form</h2>
-        
-        <label>Annual Income:</label>
-        <input type="number" name="Annual Income" required>
+  <div class="container">
+    <div class="form-box">
+      <h1>Loan Approval Prediction</h1>
+      <p class="subtitle">Fill the form to get an instant ML prediction 🔮</p>
 
-        <label>Loan Amount:</label>
-        <input type="number" name="Loan Amount" required>
+      <form action="/predict" method="POST">
+        <div class="form-group">
+          <label for="Gender">Gender</label>
+          <select name="Gender" required>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
 
-        <label>Loan Duration (Months):</label>
-        <input type="number" name="Loan Duration" min="1" required>
+        <div class="form-group">
+          <label for="Married">Married</label>
+          <select name="Married" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
 
-        <label>Employment Status:</label>
-        <select name="Employment Status" required>
-            <option value="">-- Select --</option>
-            <option value="Employed">Employed</option>
-            <option value="Self-employed">Self-employed</option>
-            <option value="Unemployed">Unemployed</option>
-            <option value="Student">Student</option>
-        </select>
+        <div class="form-group">
+          <label for="ApplicantIncome">Applicant Income</label>
+          <input type="number" name="ApplicantIncome" required>
+        </div>
 
-        <label>Total Assets:</label>
-        <input type="number" name="Total Assets" required>
+        <div class="form-group">
+          <label for="CoapplicantIncome">Coapplicant Income</label>
+          <input type="number" name="CoapplicantIncome" required>
+        </div>
 
-        <label>Home Ownership:</label>
-        <select name="Home Ownership" required>
-            <option value="">-- Select --</option>
-            <option value="Own">Own</option>
-            <option value="Rent">Rent</option>
-            <option value="Mortgage">Mortgage</option>
-        </select>
+        <div class="form-group">
+          <label for="LoanAmount">Loan Amount</label>
+          <input type="number" name="LoanAmount" required>
+        </div>
 
-        <label>Credit Score:</label>
-        <input type="number" name="Credit Score" required>
+        <div class="form-group">
+          <label for="Credit_History">Credit History</label>
+          <select name="Credit_History" required>
+            <option value="1">1</option>
+            <option value="0">0</option>
+          </select>
+        </div>
 
-        <button type="submit">Predict</button>
-    </form>
+        <button type="submit" class="predict-btn">Predict Now</button>
+      </form>
+
+      <div class="blockchain-link">
+        <a href="/check_status" target="_blank">🔗 Check Blockchain Status</a>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
+
