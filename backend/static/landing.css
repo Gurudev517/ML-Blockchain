@@ -1,0 +1,83 @@
+/* Full-screen hero with background image */
+header {
+  position: relative;
+  background: url('/static/ml_blockchain_bg.jpg') no-repeat center center/cover;
+  height: 100vh;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+header .overlay {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 40px;
+  text-align: center;
+  border-radius: 10px;
+}
+
+header h1 {
+  font-size: 3em;
+  margin-bottom: 10px;
+  color: #4cafef;
+}
+
+header p {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+.start-btn {
+  background-color: #4cafef;
+  color: white;
+  padding: 12px 24px;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+}
+
+.start-btn:hover {
+  background-color: #1976d2;
+}
+
+/* Info section */
+.info {
+  background: #f9f9f9;
+  color: #333;
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.info h2 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.info p {
+  max-width: 700px;
+  margin: 0 auto 15px auto;
+  line-height: 1.6;
+}
+
+.info .disclaimer {
+  color: #f44336;
+  font-weight: bold;
+}
+
+/* Footer */
+footer {
+  background: #111;
+  color: #aaa;
+  text-align: center;
+  padding: 15px 0;
+}
+
+footer a {
+  color: #4cafef;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
