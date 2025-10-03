@@ -1,120 +1,81 @@
 from flask import Flask, render_template, request
+import joblib
 import numpy as np
-import pickle
-import os
 from web3 import Web3
+import os
 
-app = Flask(__name__, template_folder="templates")
+app = Flask(__name__)
 
-# ----------------------
-# Load models
-# ----------------------
-MODEL_DIR = os.path.join(os.path.dirname(__file__), "models")
+# --------------------------
+# 1️⃣ Load ML Model
+# --------------------------
+MODEL_PATH = os.path.join(os.path.dirname(__file__), 'model', 'loan_model.pkl')
+model = joblib.load(MODEL_PATH)
 
-models = {}
-for name in ["logistic_model", "decision_tree_model", "random_forest_model", "svm_model"]:
-    with open(os.path.join(MODEL_DIR, f"{name}.pkl"), "rb") as f:
-        models[name] = pickle.load(f)
+# --------------------------
+# 2️⃣ Blockchain Connection
+# --------------------------
+# Make sure your .env or hardhat node has these values correctly
+INFURA_URL = "https://sepolia.infura.io/v3/YOUR_INFURA_PROJECT_ID"
+CONTRACT_ADDRESS = "YOUR_DEPLOYED_CONTRACT_ADDRESS"
+PRIVATE_KEY = "YOUR_WALLET_PRIVATE_KEY"      # ⚠ keep this secret
+PUBLIC_ADDRESS = "YOUR_WALLET_PUBLIC_ADDRESS"
 
-# Load accuracies
-with open(os.path.join(MODEL_DIR, "accuracies.pkl"), "rb") as f:
-    accuracies = pickle.load(f)
+# Optional connection
+try:
+    web3 = Web3(Web3.HTTPProvider(INFURA_URL))
+    if web3.is_connected():
+        print("✅ Connected to Sepolia Testnet")
+    else:
+        print("❌ Failed to connect to Sepolia")
+except Exception as e:
+    print(f"Blockchain connection error: {e}")
+    web3 = None
 
-# ----------------------
-# Web3 Setup
-# ----------------------
-INFURA_URL = "https://sepolia.infura.io/v3/591a5c339ebd449ba8bd5a767290d5cb"
-PRIVATE_KEY = "d1e6f833fcb720bc7428d8cf1d479641bfedbb75b08efbddd7c70f43cf3bad30"  # Replace with your private key
-ACCOUNT_ADDRESS = "0x578EBf0501c9c108AD61B1dEcc90242907c5BD70"  # Replace with your wallet address
+# --------------------------
+# 3️⃣ Routes
+# --------------------------
 
-web3 = Web3(Web3.HTTPProvider(INFURA_URL))
-print("Web3 connected:", web3.is_connected())
+@app.route('/')
+def home():
+    # Landing page (you can make a separate index.html for welcome screen)
+    return render_template('loanform.html')
 
-CONTRACT_ADDRESS = "0xb52A6723904452769c7d368A519486e46547a0Fe"
-CONTRACT_ABI = [ 
-    { "anonymous": False, "inputs": [ { "indexed": False, "internalType": "uint256", "name": "loanId", "type": "uint256" }, { "indexed": False, "internalType": "address", "name": "borrower", "type": "address" }, { "indexed": False, "internalType": "uint256", "name": "amount", "type": "uint256" }, { "indexed": False, "internalType": "uint256", "name": "duration", "type": "uint256" }, { "indexed": False, "internalType": "string", "name": "decision", "type": "string" } ], "name": "LoanStored", "type": "event" },
-    { "inputs": [ { "internalType": "uint256", "name": "_loanId", "type": "uint256" } ], "name": "getLoan", "outputs": [ { "internalType": "address", "name": "borrower", "type": "address" }, { "internalType": "uint256", "name": "amount", "type": "uint256" }, { "internalType": "uint256", "name": "duration", "type": "uint256" }, { "internalType": "string", "name": "decision", "type": "string" } ], "stateMutability": "view", "type": "function" },
-    { "inputs": [], "name": "loanCount", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "stateMutability": "view", "type": "function" },
-    { "inputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "name": "loans", "outputs": [ { "internalType": "address", "name": "borrower", "type": "address" }, { "internalType": "uint256", "name": "amount", "type": "uint256" }, { "internalType": "uint256", "name": "duration", "type": "uint256" }, { "internalType": "string", "name": "decision", "type": "string" } ], "stateMutability": "view", "type": "function" },
-    { "inputs": [ { "internalType": "uint256", "name": "_amount", "type": "uint256" }, { "internalType": "uint256", "name": "_duration", "type": "uint256" }, { "internalType": "string", "name": "_decision", "type": "string" } ], "name": "storeLoan", "outputs": [], "stateMutability": "nonpayable", "type": "function" }
-]
-
-contract = web3.eth.contract(address=CONTRACT_ADDRESS, abi=CONTRACT_ABI)
-
-# ----------------------
-# Routes
-# ----------------------
-@app.route("/")
-def index():
-    return render_template("loanform.html")
-
-@app.route("/predict", methods=["POST"])
+@app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # Collect form data
-        annual_income = float(request.form["Annual Income"])
-        loan_amount = float(request.form["Loan Amount"])
-        employment_status = request.form["Employment Status"]
-        total_assets = float(request.form["Total Assets"])
-        home_ownership = request.form["Home Ownership"]
-        credit_score = float(request.form["Credit Score"])
+        # Extract form values
+        gender = 1 if request.form['Gender'] == 'Male' else 0
+        married = 1 if request.form['Married'] == 'Yes' else 0
+        applicant_income = float(request.form['ApplicantIncome'])
+        coapplicant_income = float(request.form['CoapplicantIncome'])
+        loan_amount = float(request.form['LoanAmount'])
+        credit_history = int(request.form['Credit_History'])
 
-        # Add a loan duration (for blockchain demo)
-        loan_duration = 12  # fixed 12 months for now
+        # Prepare features in the order model expects
+        features = np.array([[gender, married, applicant_income, coapplicant_income, loan_amount, credit_history]])
+        prediction = model.predict(features)[0]
 
-        # Encode categorical variables
-        emp_map = {"Employed": 0, "Self-employed": 1, "Unemployed": 2, "Student": 3}
-        home_map = {"Own": 0, "Rent": 1, "Mortgage": 2}
+        result_text = "✅ Loan Approved" if prediction == 1 else "❌ Loan Rejected"
 
-        employment_status = emp_map.get(employment_status, 0)
-        home_ownership = home_map.get(home_ownership, 0)
+        # (Optional) store status on blockchain (if implemented in your contract)
+        # You can trigger your contract method here if needed
 
-        # Prepare input
-        features = np.array([
-            annual_income, loan_amount, employment_status,
-            total_assets, home_ownership, credit_score
-        ]).reshape(1, -1)
-
-        # Predictions
-        results = {}
-        for name, model in models.items():
-            pred = model.predict(features)[0]
-            results[name] = {
-                "prediction": "✅ Approved" if pred == 1 else "❌ Rejected",
-                "accuracy": round(accuracies[name] * 100, 2)
-            }
-
-        # Best model (highest accuracy)
-        best_model = max(results, key=lambda x: results[x]["accuracy"])
-        final_prediction = results[best_model]["prediction"]
-
-        # ---------------- Blockchain Part ----------------
-        decision = "Approved" if "Approved" in final_prediction else "Rejected"
-
-        nonce = web3.eth.get_transaction_count(ACCOUNT_ADDRESS)
-        txn = contract.functions.storeLoan(int(loan_amount), loan_duration, decision).build_transaction({
-            "from": ACCOUNT_ADDRESS,
-            "nonce": nonce,
-            "gas": 300000,
-            "gasPrice": web3.to_wei("10", "gwei")
-        })
-
-        signed_txn = web3.eth.account.sign_transaction(txn, private_key=PRIVATE_KEY)
-        tx_hash = web3.eth.send_raw_transaction(signed_txn.raw_transaction)
-        tx_hash_hex = web3.to_hex(tx_hash)
-
-        # Render result page with loan info
-        return render_template(
-            "result.html",
-            predictions=results,
-            final=final_prediction,
-            tx_hash=tx_hash_hex,
-            loan_amount=loan_amount,
-            loan_duration=loan_duration
-        )
+        return render_template('result.html', result=result_text)
 
     except Exception as e:
-        return f"<h3>Error: {e}</h3>"
+        print(f"Prediction error: {e}")
+        return "An error occurred during prediction. Check server logs."
 
-if __name__ == "__main__":
-    app.run(debug=True)
+@app.route('/check_status')
+def check_status():
+    # Here you could read data from the blockchain contract if required
+    # For demo, we'll return a placeholder
+    return "<h2 style='text-align:center;'>🔗 Blockchain status check will appear here.</h2>"
+
+# --------------------------
+# 4️⃣ Run the App
+# --------------------------
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)
+
