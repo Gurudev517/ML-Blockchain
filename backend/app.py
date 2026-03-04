@@ -71,7 +71,6 @@ def predict():
         # ------------------ Collect Form Data ------------------
         annual_income = float(request.form["Annual Income"])
         loan_amount = float(request.form["Loan Amount"])
-        monthly_payment = float(request.form["MonthlyLoanPayment"])
         employment_status = request.form["Employment Status"]
         total_assets = float(request.form["Total Assets"])
         home_ownership = request.form["Home Ownership"]
